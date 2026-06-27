@@ -199,7 +199,7 @@
       updateSoundButton();
     });
 
-    document.addEventListener('keydown', handleGlobalKeydown);
+    document.addEventListener('keydown', handleGlobalKeydown, { capture: true });
     dom.gameScreen.addEventListener('click', () => dom.gameScreen.focus());
     window.addEventListener('resize', resizeCanvas);
     document.addEventListener('visibilitychange', () => {
@@ -353,17 +353,8 @@
       return;
     }
 
-    if (event.code === 'Space') {
-      if (state.screen === 'start') {
-        event.preventDefault();
-        startGame();
-        return;
-      }
-      if (state.screen === 'result') {
-        event.preventDefault();
-        startGame();
-        return;
-      }
+    if (isSpaceKey(event) && handleSpaceShortcut(event)) {
+      return;
     }
 
     if (state.screen !== 'game' || !state.isPlaying) return;
@@ -372,6 +363,19 @@
     if (!/^[a-z'\-]$/.test(key)) return;
     event.preventDefault();
     processKey(key);
+  }
+
+  function isSpaceKey(event) {
+    return event.code === 'Space' || event.key === ' ';
+  }
+
+  function handleSpaceShortcut(event) {
+    if (event.ctrlKey || event.metaKey || event.altKey) return false;
+    if (state.screen !== 'start' && state.screen !== 'game' && state.screen !== 'result') return false;
+    event.preventDefault();
+    event.stopPropagation();
+    startGame();
+    return true;
   }
 
   function processKey(key) {
