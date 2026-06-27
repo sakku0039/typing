@@ -4,7 +4,7 @@
 
   const $ = (selector) => document.querySelector(selector);
 
-  const DEFAULT_ADMIN_HASH = 'd1d635691348a2f4514c56ff3c2f9e72eee2a990a6c661272bb46efbeb75f4ba'; // default password: romaji-admin
+  const DEFAULT_ADMIN_HASH = '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0'; // default password: 0000
 
   const dom = {
     loginView: $('#loginView'),
@@ -152,8 +152,8 @@
       event.preventDefault();
       const password = dom.newPassword.value;
       const confirm = dom.newPasswordConfirm.value;
-      if (password.length < 6) {
-        toast('パスワードは6文字以上にしてください。');
+      if (password.length < 4) {
+        toast('パスワードは4文字以上にしてください。');
         return;
       }
       if (password !== confirm) {
