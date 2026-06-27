@@ -95,15 +95,6 @@
     'ぐぁ': ['gwa'], 'ぐぃ': ['gwi'], 'ぐぇ': ['gwe'], 'ぐぉ': ['gwo']
   };
 
-  const vowelByKana = {
-    'あ': 'あ', 'か': 'あ', 'さ': 'あ', 'た': 'あ', 'な': 'あ', 'は': 'あ', 'ま': 'あ', 'や': 'あ', 'ら': 'あ', 'わ': 'あ', 'が': 'あ', 'ざ': 'あ', 'だ': 'あ', 'ば': 'あ', 'ぱ': 'あ', 'ぁ': 'あ',
-    'い': 'い', 'き': 'い', 'し': 'い', 'ち': 'い', 'に': 'い', 'ひ': 'い', 'み': 'い', 'り': 'い', 'ぎ': 'い', 'じ': 'い', 'ぢ': 'い', 'び': 'い', 'ぴ': 'い', 'ぃ': 'い', 'ゐ': 'い',
-    'う': 'う', 'く': 'う', 'す': 'う', 'つ': 'う', 'ぬ': 'う', 'ふ': 'う', 'む': 'う', 'ゆ': 'う', 'る': 'う', 'ぐ': 'う', 'ず': 'う', 'づ': 'う', 'ぶ': 'う', 'ぷ': 'う', 'ぅ': 'う', 'ゔ': 'う',
-    'え': 'え', 'け': 'え', 'せ': 'え', 'て': 'え', 'ね': 'え', 'へ': 'え', 'め': 'え', 'れ': 'え', 'げ': 'え', 'ぜ': 'え', 'で': 'え', 'べ': 'え', 'ぺ': 'え', 'ぇ': 'え', 'ゑ': 'え',
-    'お': 'お', 'こ': 'お', 'そ': 'お', 'と': 'お', 'の': 'お', 'ほ': 'お', 'も': 'お', 'よ': 'お', 'ろ': 'お', 'を': 'お', 'ご': 'お', 'ぞ': 'お', 'ど': 'お', 'ぼ': 'お', 'ぽ': 'お', 'ぉ': 'お'
-  };
-
-  const smallKana = new Set(['ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'ゃ', 'ゅ', 'ょ', 'ゎ']);
   const punctuationPattern = /[、。，．・!！?？「」『』（）()［］\[\]【】〈〉《》“”\"：:；;〜~…]/g;
   const particles = [];
   const MAX_VARIANTS = 3000;
@@ -298,7 +289,7 @@
   }
 
   function prepareWord(word) {
-    const generated = kanaToRomajiVariants(word.kana || word.text || '');
+    const generated = getRomajiSources(word).flatMap(kanaToRomajiVariants);
     const custom = normalizeCustomRomaji(word.romaji);
     const variants = unique([...custom, ...generated])
       .map((value) => value.toLowerCase().replace(/\s+/g, ''))
@@ -583,7 +574,7 @@
   }
 
   function buildKeyboard() {
-    const rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+    const rows = ['qwertyuiop-', 'asdfghjkl', 'zxcvbnm'];
     dom.keyboard.innerHTML = '';
     state.keyboardKeys.clear();
     rows.forEach((rowText) => {
@@ -770,6 +761,13 @@
     return values.map((value) => String(value).toLowerCase().replace(/\s+/g, '').trim()).filter(Boolean);
   }
 
+  function getRomajiSources(word) {
+    const text = String(word.text || '').trim();
+    const kana = String(word.kana || '').trim();
+    if (text.includes('ー')) return [text];
+    return unique([kana || text, text].filter(Boolean));
+  }
+
   function kanaToRomajiVariants(rawKana) {
     const kana = normalizeKana(rawKana);
     if (!kana) return [];
@@ -799,6 +797,12 @@
         const next = chars[index + 1] || '';
         const options = needsDoubleN(next) ? ['nn', "n'"] : ['n', 'nn'];
         result = combine(options, rec(index + 1));
+        memo.set(index, result.slice(0, MAX_VARIANTS));
+        return memo.get(index);
+      }
+
+      if (char === 'ー') {
+        result = combine(['-'], rec(index + 1));
         memo.set(index, result.slice(0, MAX_VARIANTS));
         return memo.get(index);
       }
@@ -837,29 +841,7 @@
       if (char === 'ヶ') return 'け';
       return char;
     }).join('');
-    return expandLongVowels(text);
-  }
-
-  function expandLongVowels(text) {
-    const chars = Array.from(text);
-    const out = [];
-    let lastVowel = '';
-    chars.forEach((char) => {
-      if (char === 'ー') {
-        out.push(lastVowel || '');
-        return;
-      }
-      out.push(char);
-      if (vowelByKana[char]) lastVowel = vowelByKana[char];
-      if (smallKana.has(char)) {
-        if (char === 'ゃ' || char === 'ぁ') lastVowel = 'あ';
-        if (char === 'ゅ' || char === 'ぅ') lastVowel = 'う';
-        if (char === 'ょ' || char === 'ぉ') lastVowel = 'お';
-        if (char === 'ぃ') lastVowel = 'い';
-        if (char === 'ぇ') lastVowel = 'え';
-      }
-    });
-    return out.join('');
+    return text;
   }
 
   function needsDoubleN(nextKana) {
