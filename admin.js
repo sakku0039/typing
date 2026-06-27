@@ -68,7 +68,7 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = () => {
-        dom.jsonEditor.value = String(reader.result || '');
+        setEditorValue(String(reader.result || ''));
         validateEditor({ quiet: false });
       };
       reader.onerror = () => toast('ファイルを読み込めませんでした。');
@@ -89,7 +89,7 @@
         showValidation(checked.errors, false);
         return;
       }
-      dom.jsonEditor.value = JSON.stringify(checked.data, null, 2);
+      setEditorValue(JSON.stringify(checked.data, null, 2));
       renderPreview(checked.data);
       showValidation([
         `このブラウザに保存しました。${checked.data.lessons.length}コースを確認できます。`,
@@ -104,7 +104,7 @@
         showValidation(checked.errors, false);
         return;
       }
-      dom.jsonEditor.value = JSON.stringify(checked.data, null, 2);
+      setEditorValue(JSON.stringify(checked.data, null, 2));
       showValidation(['JSONを整形しました。'], true);
     });
 
@@ -112,7 +112,7 @@
       const ok = window.confirm('初期データに戻します。現在保存している内容は消えます。よろしいですか？');
       if (!ok) return;
       const data = RST.resetContent();
-      dom.jsonEditor.value = JSON.stringify(data, null, 2);
+      setEditorValue(JSON.stringify(data, null, 2));
       renderPreview(data);
       showValidation(['初期データに戻しました。'], true);
       toast('初期データに戻しました。');
@@ -125,7 +125,7 @@
         return;
       }
       const json = JSON.stringify(checked.data, null, 2);
-      dom.jsonEditor.value = json;
+      setEditorValue(json);
       renderPreview(checked.data);
       downloadFile('questions.json', json, 'application/json');
       showValidation([
@@ -171,12 +171,12 @@
   async function loadEditorDataFromBestSource({ quiet }) {
     try {
       const data = await RST.loadSharedContent();
-      dom.jsonEditor.value = JSON.stringify(data, null, 2);
+      setEditorValue(JSON.stringify(data, null, 2));
       renderPreview(data);
       if (!quiet) showValidation(['共有中の questions.json を読み込みました。編集後、共有用 questions.json としてダウンロードできます。'], true);
     } catch (error) {
       const data = RST.loadContent();
-      dom.jsonEditor.value = JSON.stringify(data, null, 2);
+      setEditorValue(JSON.stringify(data, null, 2));
       renderPreview(data);
       const detail = error && error.message ? error.message : String(error);
       showValidation([
@@ -188,7 +188,7 @@
 
   function refreshEditorFromStorage() {
     const data = RST.loadContent();
-    dom.jsonEditor.value = JSON.stringify(data, null, 2);
+    setEditorValue(JSON.stringify(data, null, 2));
     renderPreview(data);
   }
 
@@ -250,9 +250,31 @@
     dom.loginView.classList.toggle('hidden', isAuthenticated);
     dom.adminView.classList.toggle('is-active', isAuthenticated);
     if (isAuthenticated) {
-      setTimeout(() => dom.jsonEditor.focus(), 60);
+      window.scrollTo(0, 0);
+      setTimeout(() => focusWithoutScroll(dom.jsonEditor), 60);
     } else {
-      setTimeout(() => dom.adminPassword.focus(), 60);
+      setTimeout(() => focusWithoutScroll(dom.adminPassword), 60);
+    }
+  }
+
+  function setEditorValue(value) {
+    dom.jsonEditor.value = value;
+    resetEditorScroll();
+  }
+
+  function resetEditorScroll() {
+    dom.jsonEditor.scrollTop = 0;
+    dom.jsonEditor.scrollLeft = 0;
+    dom.jsonEditor.selectionStart = 0;
+    dom.jsonEditor.selectionEnd = 0;
+  }
+
+  function focusWithoutScroll(element) {
+    if (!element) return;
+    try {
+      element.focus({ preventScroll: true });
+    } catch (_error) {
+      element.focus();
     }
   }
 
