@@ -12,6 +12,13 @@
   <canvas id="fxCanvas" aria-hidden="true"></canvas>
   <div class="aurora aurora-one" aria-hidden="true"></div>
   <div class="aurora aurora-two" aria-hidden="true"></div>
+  <div class="pop-sky" aria-hidden="true">
+    <span class="pop-cloud cloud-one"></span>
+    <span class="pop-cloud cloud-two"></span>
+    <span class="pop-rainbow"></span>
+    <img class="sky-mascot sky-mascot-one" src="assets/mascot-star.svg" alt="">
+    <img class="sky-mascot sky-mascot-two" src="assets/mascot-leaf.svg" alt="">
+  </div>
 
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="ホームに戻る">
@@ -32,12 +39,17 @@
       <div class="hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">ROMAJI INPUT TRAINING</p>
-          <h1>正しく打つほど<br><span>スター召喚レベル</span>アップ！</h1>
+          <h1>正しく打つほど<br><span>スター召喚レベル</span><span class="hero-up">アップ！</span></h1>
           <p class="hero-text">ローマ字を入力して星を集めよう。ミスを少なくするとコンボとレベルが上がり、1タイプでたくさんのスターが出現します。</p>
           <div class="hero-badges" aria-label="特徴">
             <span>60秒ミッション</span>
             <span>じっくり練習</span>
             <span>ローマ字ゆれ対応</span>
+          </div>
+          <div class="hero-mascot-row" aria-hidden="true">
+            <img src="assets/mascot-star.svg" alt="">
+            <img src="assets/mascot-moon.svg" alt="">
+            <img src="assets/mascot-leaf.svg" alt="">
           </div>
         </div>
         <div class="mission-card" aria-label="ミッション設定">
@@ -103,6 +115,7 @@
 
       <aside class="panel side-panel">
         <div class="rank-orb" id="rankOrb">
+          <img src="assets/mascot-star.svg" alt="" aria-hidden="true">
           <span>LEVEL</span>
           <strong id="level">1</strong>
         </div>
