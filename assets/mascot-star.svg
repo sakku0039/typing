@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="スターマスコット">
+  <defs>
+    <linearGradient id="body" x1="24" x2="136" y1="24" y2="140" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff46b"/>
+      <stop offset=".55" stop-color="#ffcc4d"/>
+      <stop offset="1" stop-color="#ff8f6b"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#7c4d12" flood-opacity=".22"/>
+    </filter>
+  </defs>
+  <path fill="#7ed7ff" d="M31 119c-15-18-12-44 8-58 6-31 42-48 71-32 28 2 48 26 44 54 10 22-5 49-31 53-20 20-58 14-72-8-7 0-14-3-20-9Z" opacity=".34"/>
+  <path filter="url(#shadow)" fill="url(#body)" d="m81 15 16 38 41 4-31 27 9 40-35-21-35 21 9-40-31-27 41-4 16-38Z"/>
+  <circle cx="62" cy="78" r="7" fill="#38415e"/>
+  <circle cx="99" cy="78" r="7" fill="#38415e"/>
+  <path fill="none" stroke="#38415e" stroke-linecap="round" stroke-width="7" d="M67 98c7 8 20 8 27 0"/>
+  <circle cx="47" cy="91" r="9" fill="#ff8faa" opacity=".65"/>
+  <circle cx="113" cy="91" r="9" fill="#ff8faa" opacity=".65"/>
+</svg>

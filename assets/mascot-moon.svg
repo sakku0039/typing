@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="ムーンマスコット">
+  <defs>
+    <linearGradient id="body" x1="31" x2="132" y1="22" y2="138" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".48" stop-color="#d6f3ff"/>
+      <stop offset="1" stop-color="#a8d8ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#31506f" flood-opacity=".24"/>
+    </filter>
+  </defs>
+  <path fill="#ffd2e9" d="M23 99C9 73 22 40 51 30c22-26 69-16 82 19 26 16 29 56 4 75-16 25-55 31-78 11-14 1-28-6-36-36Z" opacity=".35"/>
+  <path filter="url(#shadow)" fill="url(#body)" d="M108 24c-24 8-42 30-42 57 0 24 14 45 35 55-7 3-15 5-24 5-35 0-63-28-63-63s28-63 63-63c12 0 22 3 31 9Z"/>
+  <circle cx="73" cy="79" r="7" fill="#38415e"/>
+  <circle cx="108" cy="75" r="7" fill="#38415e"/>
+  <path fill="none" stroke="#38415e" stroke-linecap="round" stroke-width="7" d="M79 101c8 6 19 5 26-2"/>
+  <circle cx="59" cy="93" r="8" fill="#ff9fc0" opacity=".7"/>
+  <circle cx="119" cy="88" r="8" fill="#ff9fc0" opacity=".7"/>
+</svg>
