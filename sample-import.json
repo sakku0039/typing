@@ -1,0 +1,24 @@
+{
+  "schema": "romaji-star-typing.v1",
+  "appTitle": "ローマ字スタータイピング",
+  "appSubtitle": "小学生向けのローマ字入力練習",
+  "lessons": [
+    {
+      "id": "festival-words",
+      "title": "お祭りことば",
+      "description": "夏祭りや学校行事で使うことばを楽しく練習します。",
+      "difficulty": "★★☆",
+      "timeLimit": 60,
+      "words": [
+        { "text": "おまつり", "kana": "おまつり", "hint": "tsu / tu どちらでもOK" },
+        { "text": "はなび", "kana": "はなび", "hint": "夏の夜空" },
+        { "text": "きんぎょ", "kana": "きんぎょ", "hint": "ぎょ = gyo" },
+        { "text": "わたあめ", "kana": "わたあめ", "hint": "母音が続くよ" },
+        { "text": "ちょうちん", "kana": "ちょうちん", "hint": "cho / tyo どちらでもOK" },
+        { "text": "やきそば", "kana": "やきそば", "hint": "ya ki so ba" },
+        { "text": "しゃてき", "kana": "しゃてき", "hint": "sha / sya どちらでもOK" },
+        { "text": "たのしい", "kana": "たのしい", "hint": "正確に打とう" }
+      ]
+    }
+  ]
+}

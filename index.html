@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ローマ字スタータイピング</title>
+  <meta name="description" content="小学生向けのローマ字入力タイピング練習Webアプリ">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-game">
+  <canvas id="fxCanvas" aria-hidden="true"></canvas>
+  <div class="aurora aurora-one" aria-hidden="true"></div>
+  <div class="aurora aurora-two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="ホームに戻る">
+      <span class="brand-mark">✦</span>
+      <span>
+        <strong id="appTitle">ローマ字スタータイピング</strong>
+        <small id="appSubtitle">キーボードでスターを集めよう</small>
+      </span>
+    </a>
+    <nav class="top-actions">
+      <button id="soundToggle" class="ghost-button" type="button" aria-pressed="true">🔊 サウンド</button>
+      <a class="ghost-button" href="admin.html">管理者ページ</a>
+    </nav>
+  </header>
+
+  <main class="app-shell">
+    <section id="startScreen" class="panel hero-card screen is-active">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">ROMAJI INPUT TRAINING</p>
+          <h1>正しく打つほど<br><span>スター召喚レベル</span>アップ！</h1>
+          <p class="hero-text">ローマ字を入力して星を集めよう。ミスを少なくするとコンボとレベルが上がり、1タイプでたくさんのスターが出現します。</p>
+          <div class="hero-badges" aria-label="特徴">
+            <span>60秒ミッション</span>
+            <span>じっくり練習</span>
+            <span>ローマ字ゆれ対応</span>
+          </div>
+        </div>
+        <div class="mission-card" aria-label="ミッション設定">
+          <div class="field-group">
+            <label for="lessonSelect">コースを選ぶ</label>
+            <select id="lessonSelect"></select>
+          </div>
+          <div id="lessonDescription" class="lesson-description"></div>
+          <div class="mode-switch" role="group" aria-label="練習モード">
+            <button class="mode-button is-selected" type="button" data-mode="challenge">60秒ミッション</button>
+            <button class="mode-button" type="button" data-mode="practice">じっくり練習</button>
+          </div>
+          <button id="startButton" class="primary-button" type="button">
+            <span>スペースキーでスタート</span>
+            <strong>START</strong>
+          </button>
+          <p class="microcopy">ローマ字入力モードです。例：し = shi / si、ち = chi / ti、つ = tsu / tu。</p>
+          <p id="contentSourceStatus" class="source-status" aria-live="polite">出題データを読み込み中...</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-layout" tabindex="-1" aria-label="タイピングゲーム画面">
+      <div class="panel typing-stage">
+        <div class="hud-grid">
+          <div class="hud-item">
+            <span>TIME</span>
+            <strong id="timeLeft">60</strong>
+          </div>
+          <div class="hud-item">
+            <span>STARS</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="hud-item">
+            <span>COMBO</span>
+            <strong id="combo">0</strong>
+          </div>
+          <div class="hud-item">
+            <span>ACCURACY</span>
+            <strong id="accuracy">100%</strong>
+          </div>
+        </div>
+
+        <div class="target-card" id="targetCard">
+          <div class="target-topline">
+            <span id="wordCount">1 / 10</span>
+            <span id="wordHint">ヒント</span>
+          </div>
+          <div id="targetText" class="target-text">がっこう</div>
+          <div id="targetKana" class="target-kana">がっこう</div>
+          <div id="romajiLine" class="romaji-line" aria-live="polite"></div>
+          <div id="typedBuffer" class="typed-buffer" aria-label="入力済み文字"></div>
+        </div>
+
+        <div class="keyboard-zone">
+          <div class="next-key-card">
+            <span>次のキー</span>
+            <strong id="nextKey">S</strong>
+          </div>
+          <div id="keyboard" class="keyboard" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <aside class="panel side-panel">
+        <div class="rank-orb" id="rankOrb">
+          <span>LEVEL</span>
+          <strong id="level">1</strong>
+        </div>
+        <div class="meter-block">
+          <div class="meter-label">
+            <span>召喚エネルギー</span>
+            <strong id="xpText">0%</strong>
+          </div>
+          <div class="meter"><span id="xpBar"></span></div>
+        </div>
+        <div class="bonus-card" id="bonusCard">
+          <span>正確に打つと</span>
+          <strong>スターが増える！</strong>
+          <p>ミスをしないほど、1タイプで獲得できるスターがアップします。</p>
+        </div>
+        <div class="mini-help">
+          <h2>操作</h2>
+          <p>英字キーで入力 / Escでタイトルへ / スペースでリトライ</p>
+          <p>入力できない時は、ゲーム画面をクリックしてください。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="resultScreen" class="panel result-card screen" aria-label="結果画面">
+      <p class="eyebrow">MISSION COMPLETE</p>
+      <h1 id="resultTitle">スタータイパー！</h1>
+      <div class="result-rank" id="resultRank">A</div>
+      <div class="result-grid">
+        <div><span>スター</span><strong id="resultScore">0</strong></div>
+        <div><span>正確さ</span><strong id="resultAccuracy">100%</strong></div>
+        <div><span>入力キー</span><strong id="resultKeys">0</strong></div>
+        <div><span>クリア語数</span><strong id="resultWords">0</strong></div>
+        <div><span>最高コンボ</span><strong id="resultBestCombo">0</strong></div>
+        <div><span>到達レベル</span><strong id="resultLevel">1</strong></div>
+      </div>
+      <div id="resultMessage" class="result-message"></div>
+      <div class="result-actions">
+        <button id="retryButton" class="primary-button" type="button">もう一度プレイ</button>
+        <button id="homeButton" class="secondary-button" type="button">コース選択へ</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="shared.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

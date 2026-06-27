@@ -1,0 +1,11 @@
+{
+  "name": "romaji-star-typing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check shared.js && node --check app.js && node --check admin.js && node scripts/validate-content.mjs",
+    "test": "npm run check",
+    "start": "python3 -m http.server 8000"
+  }
+}
