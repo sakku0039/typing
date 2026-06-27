@@ -122,6 +122,7 @@
     input: '',
     isPlaying: false,
     startTime: 0,
+    timerStarted: false,
     duration: 60,
     timerId: null,
     rafId: null,
@@ -203,7 +204,7 @@
     dom.gameScreen.addEventListener('click', () => dom.gameScreen.focus());
     window.addEventListener('resize', resizeCanvas);
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && state.isPlaying && state.mode === 'challenge') {
+      if (document.hidden && state.isPlaying && state.mode === 'challenge' && state.timerStarted) {
         endGame('paused');
       }
     });
@@ -270,7 +271,8 @@
     state.currentItem = null;
     state.input = '';
     state.isPlaying = true;
-    state.startTime = performance.now();
+    state.startTime = 0;
+    state.timerStarted = false;
     state.stats = {
       hits: 0,
       misses: 0,
@@ -290,8 +292,8 @@
     dom.gameScreen.focus();
 
     clearInterval(state.timerId);
-    state.timerId = setInterval(tick, 120);
-    tick();
+    state.timerId = null;
+    resetCountdownDisplay();
     playStartSound();
   }
 
@@ -332,6 +334,10 @@
     if (!state.isPlaying) return;
     if (state.mode === 'practice') {
       dom.timeLeft.textContent = '∞';
+      return;
+    }
+    if (!state.timerStarted) {
+      dom.timeLeft.textContent = String(state.duration);
       return;
     }
     const elapsed = (performance.now() - state.startTime) / 1000;
@@ -380,6 +386,7 @@
 
   function processKey(key) {
     pulseKeyboardKey(key);
+    startCountdownIfNeeded();
     const candidate = state.input + key;
     state.stats.keystrokes += 1;
 
@@ -420,6 +427,19 @@
     }
   }
 
+  function resetCountdownDisplay() {
+    dom.timeLeft.textContent = state.mode === 'practice' ? '∞' : String(state.duration);
+  }
+
+  function startCountdownIfNeeded() {
+    if (state.mode !== 'challenge' || state.timerStarted) return;
+    state.startTime = performance.now();
+    state.timerStarted = true;
+    clearInterval(state.timerId);
+    state.timerId = setInterval(tick, 120);
+    tick();
+  }
+
   function completeWord() {
     state.stats.wordsCleared += 1;
     const perfectBonus = state.stats.mistakesInWord === 0 ? 20 + state.stats.level * 4 : 8 + state.stats.level;
@@ -436,6 +456,7 @@
   function endGame(reason) {
     if (!state.isPlaying && state.screen === 'result') return;
     state.isPlaying = false;
+    state.timerStarted = false;
     clearInterval(state.timerId);
     state.timerId = null;
     showResults(reason);
@@ -445,7 +466,9 @@
 
   function goHome() {
     state.isPlaying = false;
+    state.timerStarted = false;
     clearInterval(state.timerId);
+    state.timerId = null;
     showScreen('start');
     updateLessonDescription();
   }
